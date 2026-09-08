@@ -24,14 +24,3 @@ $(BUILD)/%.o: $(SRC)/%.c
 clean:
 	rm -rf $(BUILD)
 
-M = ""
-push:
-	git status
-	echo "----- WILL BE COMMITING THIS -----"
-	sleep 1
-	git add .
-	git commit -m "$(M)"
-	git push origin main
-
-
-
