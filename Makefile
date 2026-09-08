@@ -1,26 +1,25 @@
-CC := g++
+CXX      := clang++
+CXXFLAGS := -std=c++20 -Wall -Wextra -Wpedantic -Isrc
 
-SRC := src
-INC := include
-BUILD : build
+SRC      := src
+BUILD    := build
+TARGET   := $(BUILD)/mlux
 
-TARGET := $(BUILD)/mlux
+rwildcard = $(foreach d,$(wildcard $(1:=/*)),$(call rwildcard,$d,$2) $(filter $(subst *,%,$2),$d))
 
-SOURCES := $(wildcard $(SRC)/*.c)
-OBJECTS := $(SOURCES: $(SRC)/%.c=$(BUILD)/%.o)
-CFLAGS := -Wall -Wextra -I$(INC)
+SOURCES  := $(call rwildcard,$(SRC),*.cpp)
+OBJECTS  := $(SOURCES:$(SRC)/%.cpp=$(BUILD)/%.o)
 
 .PHONY: all clean
 
 all: $(TARGET)
 
 $(TARGET): $(OBJECTS)
-	$(CC) $^ -o $@
+	$(CXX) $^ -o $@
 
-$(BUILD)/%.o: $(SRC)/%.c
+$(BUILD)/%.o: $(SRC)/%.cpp
 	@mkdir -p $(@D)
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
 	rm -rf $(BUILD)
-
