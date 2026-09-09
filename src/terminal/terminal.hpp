@@ -1,16 +1,20 @@
 #ifndef MLUX_TERMINAL
 #define MLUX_TERMINAL
 
+#include <termios.h>
+
 namespace mlux {
 
 class Terminal {
   public:
     Terminal() = default;
-    ~Terminal() = default;
-    Terminal(const Terminal &) = delete;
-    Terminal(Terminal &&) = delete;
-    void enable_raw_mode();
-    void disable_raw_mode();
+    ~Terminal();
+    bool enable_raw_mode();
+    bool disable_raw_mode();
+
+  private:
+    struct termios original {};
+    bool raw_enabled = false;
 };
 
 } // namespace mlux
