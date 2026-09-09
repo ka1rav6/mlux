@@ -2,7 +2,7 @@
 
 namespace mlux {
 
-Pane &MLUX::create_new_pane() {}
+Pane &MLUX::create_new_pane() { return panes.emplace_back(); }
 // 1. create PTY
 
 // 2. fork
@@ -18,6 +18,8 @@ Pane &MLUX::create_new_pane() {}
 // 4. parent:
 //      close(slave)
 //      keep master
+
+void MLUX::handle_input() {}
 
 void MLUX::main_loop() {
     while (running) {

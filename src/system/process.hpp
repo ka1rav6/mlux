@@ -6,8 +6,8 @@
 namespace mlux {
 
 struct Process {
-  pid_t pid = 0;
-  std::size_t pane_id = 0;
+    pid_t pid = 0;
+    std::size_t pane_id = 0;
 };
 
 } // namespace mlux
