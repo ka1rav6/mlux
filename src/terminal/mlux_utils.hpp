@@ -15,6 +15,7 @@ class MLUX {
   private:
     Pane &create_new_pane();
     bool running = false;
+    int next_pane_id = 0;
 };
 
 } // namespace mlux
