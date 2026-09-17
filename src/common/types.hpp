@@ -24,12 +24,27 @@ struct Position {
 };
 
 struct Size {
-    std::size_t width = 0;
-    std::size_t height = 0;
+    size_t width = 0;
+    size_t height = 0;
+    size_t rows = 0;
+    size_t columns = 0;
+
+    enum SizeType {
+        SIZE_WH,
+        SIZE_RC,
+    };
 
     Size() = default;
-    Size(std::size_t width, std::size_t height)
-        : width(width), height(height) {}
+    Size(size_t w_or_r, size_t h_or_c, SizeType type) {
+        if (type == SIZE_RC) {
+            this->rows = w_or_r;
+            this->columns = h_or_c;
+        }
+        if (type == SIZE_WH) {
+            this->width = w_or_r;
+            this->height = h_or_c;
+        }
+    }
 
     bool operator==(const Size &other) const {
         return width == other.width && height == other.height;
