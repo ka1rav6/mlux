@@ -5,8 +5,8 @@
 namespace mlux {
 
 Pane::Pane(const Size &size, const Position &pos, int32_t uid) {
-    this->size = size;
-    this->pos = pos;
+    this->size = std::move(size);
+    this->pos = std::move(pos);
     this->uid = uid;
     this->is_focused = true;
     this->is_dead = false;
@@ -19,6 +19,10 @@ PTY::PTY(const Size &size) {
     windowsize.ws_row = size.rows;
     // use getenv() to get which shell is being run
     auto user_shell = std::getenv("SHELL");
+    // TODO: remove once shell is used
+    std::cout
+        << "Temp printing of user shell to remove unused variable warnings "
+        << user_shell << std::endl;
     // register signal handler
 
     // forkpty() and

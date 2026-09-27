@@ -1,3 +1,7 @@
+/*
+ * contains source code of the terminal.hpp class created
+ * */
+
 #include "./terminal.hpp"
 #include <unistd.h>
 

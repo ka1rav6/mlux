@@ -5,9 +5,11 @@
 
 namespace mlux {
 
+// a wrapper just to keep track of what process of the pty has what pid and is
+// assigned to which pane
 struct Process {
     pid_t pid = 0;
-    std::size_t pane_id = 0;
+    size_t pane_id = 0;
 };
 
 } // namespace mlux

@@ -1,23 +1,25 @@
+/*
+ * contains some basic utilities required within the code.
+ * this includes Position struct and Size struct
+ * */
+
 #ifndef MLUX_COMMON_TYPES_HPP
 #define MLUX_COMMON_TYPES_HPP
 
 #include <cstddef>
 #include <cstdint>
 #include <iostream>
-
+// TODO: create copy and move constructors for these structs
 namespace mlux {
-
 struct Position {
     int x = 0;
     int y = 0;
-
     Position() = default;
     Position(int x, int y) : x(x), y(y) {}
-
     bool operator==(const Position &other) const {
         return x == other.x && y == other.y;
     }
-
+    // for debugging and logging purposes
     friend std::ostream &operator<<(std::ostream &os, const Position &pos) {
         return os << "Position(x=" << pos.x << ", y=" << pos.y << ")";
     }

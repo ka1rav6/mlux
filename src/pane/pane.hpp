@@ -7,6 +7,8 @@
 
 namespace mlux {
 
+// a wrapper over the psuedoterminal that has all the data of each pty session
+// stored
 class PTY {
   public:
     pid_t shell_pid;
@@ -21,6 +23,8 @@ class PTY {
     void run_shell();
 };
 
+// the class that stores all the information about each pane that is being
+// rendered
 class Pane {
     Size size;
     Position pos;
@@ -29,7 +33,7 @@ class Pane {
     bool is_focused = false;
     bool is_dead = false;
     Pane(const Size &size, const Position &pos, int32_t uid);
-    ~Pane();
+    ~Pane() = default;
 };
 } // namespace mlux
 

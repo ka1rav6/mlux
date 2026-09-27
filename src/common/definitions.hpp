@@ -5,7 +5,7 @@
 
 namespace mlux {
 
-inline constexpr std::uint32_t COULD_NOT_EXEC = 127;
+inline constexpr uint32_t COULD_NOT_EXEC = 127;
 
 } // namespace mlux
 
