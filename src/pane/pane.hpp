@@ -12,15 +12,13 @@ class PTY {
     pid_t shell_pid;
     int pty_master;
     int pty_slave;
-    int fd[2]; // to write/read from the bash
+    int fd[2]; // to write/read from bash
     PTY(const Size &size);
     ~PTY();
 
   private:
     void launch_shell();
     void run_shell();
-    void init_signal_handling();
-    void signal_handler(int signum);
 };
 
 class Pane {

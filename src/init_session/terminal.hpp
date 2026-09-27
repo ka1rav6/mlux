@@ -11,6 +11,8 @@ class Terminal {
     ~Terminal();
     bool enable_raw_mode();
     bool disable_raw_mode();
+    void init_signal_handling();
+    void signal_handler(int signum);
 
   private:
     struct termios original {};
