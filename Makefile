@@ -42,7 +42,7 @@ export PROJECT SRC_DIR BUILD_DIR VERSION
 rwildcard = $(foreach d,$(wildcard $(1:=/*)),$(call rwildcard,$d,$2) $(filter $(subst *,%,$2),$d))
 
 # --- Build flags (defaults: release) ----------------------------------------
-BASEFLAGS  := -std=c++20 -Wall -Wextra -Wpedantic -I.
+BASEFLAGS  := -std=c++20 -Wall -Wextra -Wpedantic -I$(CURDIR)/src
 CXXFLAGS   := $(BASEFLAGS) -O2
 LDFLAGS    :=
 LIBS       :=
