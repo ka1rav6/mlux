@@ -1,6 +1,5 @@
-#ifndef MLUX_TERMINAL
-#define MLUX_TERMINAL
 
+#pragma once
 #include <termios.h>
 
 namespace mlux {
@@ -14,14 +13,13 @@ class Terminal {
     // handles all the signals that the user sends directly so it can be parsed
     void init_signal_handling();
     void signal_handler(int signum);
+    Terminal(const Terminal &) = delete;
 
   private:
     // saves the original settings of the terminal so that it can be restored
     // later
-    struct termios original {};
+    struct termios original{};
     bool raw_enabled = false;
 };
 
 } // namespace mlux
-
-#endif

@@ -1,9 +1,7 @@
-#ifndef MLUX_TERMINAL_PANE_HPP
-#define MLUX_TERMINAL_PANE_HPP
-
+#pragma once
 #include <sys/types.h>
 
-#include "../common/types.hpp"
+#include "common/types.hpp"
 
 namespace mlux {
 
@@ -11,14 +9,12 @@ namespace mlux {
 // stored
 class PTY {
   public:
-    pid_t shell_pid;
-    int pty_master;
-    int pty_slave;
-    int fd[2]; // to write/read from bash
-    PTY(const Size &size);
+    PTY(const CellSize &size);
     ~PTY();
 
   private:
+    pid_t shell_pid = 0;
+    int pty_master = -1;
     void launch_shell();
     void run_shell();
 };
@@ -26,15 +22,15 @@ class PTY {
 // the class that stores all the information about each pane that is being
 // rendered
 class Pane {
-    Size size;
+  public:
+    CellSize size;
     Position pos;
-    int32_t uid = 0;
+    PaneId uid = 0;
     PTY *pty;
     bool is_focused = false;
     bool is_dead = false;
-    Pane(const Size &size, const Position &pos, int32_t uid);
+    Pane(const CellSize &size, const Position &pos, PaneId uid);
     ~Pane() = default;
+    Pane(const Pane &) = delete; // not allowing pane to be copiable
 };
 } // namespace mlux
-
-#endif // MLUX_TERMINAL_PANE_HPP

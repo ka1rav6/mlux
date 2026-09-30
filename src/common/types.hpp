@@ -3,19 +3,22 @@
  * this includes Position struct and Size struct
  * */
 
-#ifndef MLUX_COMMON_TYPES_HPP
-#define MLUX_COMMON_TYPES_HPP
+#pragma once
 
 #include <cstddef>
 #include <cstdint>
 #include <iostream>
 // TODO: create copy and move constructors for these structs
 namespace mlux {
+
+using PaneId = uint32_t;
+using Coord = int32_t;
+
 struct Position {
-    int x = 0;
-    int y = 0;
+    Coord x = 0;
+    Coord y = 0;
     Position() = default;
-    Position(int x, int y) : x(x), y(y) {}
+    Position(Coord x, Coord y) : x(x), y(y) {}
     bool operator==(const Position &other) const {
         return x == other.x && y == other.y;
     }
@@ -25,39 +28,38 @@ struct Position {
     }
 };
 
-struct Size {
-    size_t width = 0;
-    size_t height = 0;
-    size_t rows = 0;
-    size_t columns = 0;
+struct PixelSize {
+    Coord width = 0;
+    Coord height = 0;
 
-    enum SizeType {
-        SIZE_WH,
-        SIZE_RC,
-    };
+    PixelSize() = default;
+    PixelSize(Coord w, Coord h) : width(w), height(h) {}
 
-    Size() = default;
-    Size(size_t w_or_r, size_t h_or_c, SizeType type) {
-        if (type == SIZE_RC) {
-            this->rows = w_or_r;
-            this->columns = h_or_c;
-        }
-        if (type == SIZE_WH) {
-            this->width = w_or_r;
-            this->height = h_or_c;
-        }
-    }
-
-    bool operator==(const Size &other) const {
+    bool operator==(const PixelSize &other) const {
         return width == other.width && height == other.height;
     }
 
-    friend std::ostream &operator<<(std::ostream &os, const Size &size) {
-        return os << "Size(width=" << size.width << ", height=" << size.height
-                  << ")";
+    friend std::ostream &operator<<(std::ostream &os, const PixelSize &size) {
+        return os << "PixelSize(width=" << size.width
+                  << ", height=" << size.height << ")";
+    }
+};
+
+struct CellSize {
+    Coord rows = 0;
+    Coord columns = 0;
+
+    CellSize() = default;
+    CellSize(Coord r, Coord c) : rows(r), columns(c) {}
+
+    bool operator==(const CellSize &other) const {
+        return rows == other.rows && columns == other.columns;
+    }
+
+    friend std::ostream &operator<<(std::ostream &os, const CellSize &size) {
+        return os << "CellSize(rows=" << size.rows
+                  << ", columns=" << size.columns << ")";
     }
 };
 
 } // namespace mlux
-
-#endif // MLUX_COMMON_TYPES_HPP

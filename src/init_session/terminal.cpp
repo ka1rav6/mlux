@@ -19,6 +19,7 @@ bool Terminal::enable_raw_mode() {
     raw.c_iflag &= ~(IXON | ICRNL | BRKINT | INPCK | ISTRIP);
     raw.c_oflag &= ~(OPOST);
     raw.c_lflag &= ~(ECHO | ICANON | ISIG | IEXTEN);
+    raw.c_cflag &= ~(CSIZE | PARENB);
     raw.c_cflag |= CS8;
     raw.c_cc[VMIN] = 0;  // read() returns as soon as any byte is available
     raw.c_cc[VTIME] = 0; // no timeout — poll() does the waiting

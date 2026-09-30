@@ -3,8 +3,7 @@
  * as well as the csi node and the lexer definition
  * */
 
-#ifndef MLUX_CSI
-#define MLUX_CSI
+#pragma once
 
 #include <optional>
 #include <vector>
@@ -39,5 +38,3 @@ struct csi_node { // TODO: create copy and move constructors
     ~csi_node() = default;
 };
 } // namespace mlux
-
-#endif

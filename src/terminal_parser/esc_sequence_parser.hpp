@@ -6,15 +6,14 @@
  * This lexer returns once the state of the machine is back to `ground` and
  * gives the CSI node of the escape sequence
  */
-#ifndef MLUX_ESC_SEQ_PARSER
-#define MLUX_ESC_SEQ_PARSER
-
+#pragma once
 #include "csi.hpp"
+#include <string_view>
 
 namespace mlux {
 class esc_sequence_parser {
   public:
-    esc_sequence_parser(const char *src, csi_parser_state *st);
+    esc_sequence_parser(std::string_view src, csi_parser_state *st);
     ~esc_sequence_parser() = default;
 
   private:
@@ -25,11 +24,9 @@ class esc_sequence_parser {
     [[nodiscard]] std::vector<int> split_params();
     [[nodiscard]] char peek() const;
     char advance();
-    bool is_alpha(char c) const;
-    bool is_int(char c) const;
-    bool is_esc(char c) const;
+    [[nodiscard]] static bool is_alpha(char c);
+    [[nodiscard]] static bool is_int(char c);
+    [[nodiscard]] static bool is_esc(char c);
     void parse();
 };
 } // namespace mlux
-
-#endif

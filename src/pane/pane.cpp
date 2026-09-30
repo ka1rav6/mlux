@@ -1,10 +1,12 @@
 #include "pane.hpp"
+#include <cstdlib>
+#include <iostream>
 #include <pty.h>
 #include <sys/ioctl.h>
 
 namespace mlux {
 
-Pane::Pane(const Size &size, const Position &pos, int32_t uid) {
+Pane::Pane(const CellSize &size, const Position &pos, PaneId uid) {
     this->size = std::move(size);
     this->pos = std::move(pos);
     this->uid = uid;
@@ -12,13 +14,15 @@ Pane::Pane(const Size &size, const Position &pos, int32_t uid) {
     this->is_dead = false;
     this->pty = new PTY(size);
 }
-PTY::PTY(const Size &size) {
+PTY::PTY(const CellSize &size) {
     // calculate windowsize
-    struct winsize windowsize;
+    struct winsize windowsize = {};
     windowsize.ws_col = size.columns;
     windowsize.ws_row = size.rows;
     // use getenv() to get which shell is being run
     auto user_shell = std::getenv("SHELL");
+    if (user_shell == NULL || user_shell == nullptr)
+        user_shell = "bin/sh";
     // TODO: remove once shell is used
     std::cout
         << "Temp printing of user shell to remove unused variable warnings "
@@ -28,6 +32,9 @@ PTY::PTY(const Size &size) {
     // forkpty() and
     // store the pty_master
     this->shell_pid = forkpty(&this->pty_master, NULL, NULL, &windowsize);
+    if (this->shell_pid < 0) {
+        std::cout << "Unable to forkpty" << std::endl; // TODO: log here
+    }
 
     if (this->shell_pid == 0) {
         // child process

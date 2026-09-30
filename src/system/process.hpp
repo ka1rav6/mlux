@@ -1,7 +1,9 @@
-#ifndef MLUX_SYSTEM_PROCESS_HPP
-#define MLUX_SYSTEM_PROCESS_HPP
-
+#pragma once
 #include <sys/types.h>
+
+#include <cstddef>
+
+#include "common/types.hpp"
 
 namespace mlux {
 
@@ -9,9 +11,7 @@ namespace mlux {
 // assigned to which pane
 struct Process {
     pid_t pid = 0;
-    size_t pane_id = 0;
+    PaneId pane_id = 0;
 };
 
 } // namespace mlux
-
-#endif // MLUX_SYSTEM_PROCESS_HPP
