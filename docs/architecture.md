@@ -1,0 +1,39 @@
+# Architecture
+
+
+The `mlux` project is implemented in modern, object oriented c++. It uses `make` as the build system and `lua` as the plugin system
+
+## Folder design
+
+`src` contains all the source code of the main multiplexer.
+`bench` contains all benchmarks compared to other multiplexers
+`docs` contains all the important documentation of the project. Everything from the roadmap and this design, to the actual plugin interface documentation
+`tests` contains all the unit test/ integration tests and other tests done to rigorously test each and every part of this project
+
+All the different folders (except `docs` of course) have their dedicated `Makefile` that gets recursively called 
+
+## Class Architecture and Point
+
+In very simple words, the daemon handles multiple `sessions`. Each session is what the user detaches or attaches to.
+Each session contains multiple `windows` for the user, and each window contains multiple `panes`. The panes are the *"split terminals"* that the user is actually seeing. 
+
+The panes are drawn by `mlux` on the terminal. Every time the user does something, the bytes that are received by the terminal is parsed by the `TerminalParser`. These could be of the `csi` type, or any other type (including just normal bytes).
+
+The window contains all the `geometry` and layout of the panes. It, hence, also knows which pane is the active one and where the data was written/ should be written back to.
+
+The geometry is just the data of points and sizes required to define a pane
+`Layouts` of the panes are stored through a tree. Suppose if my current structure is something like this:
+
+```
+|-----------------|---------------|
+|                 |               |
+|                 |               |
+|                 |               |
+|-----------------|               |
+|                 |               |
+|                 |               |
+|                 |               |
+|-----------------|---------------|
+```
+
+Then, the top most pane layout node, has two children nodes (of a vertical split) for the left and the right panes. The left pane has two more children that are separated because of a horizontal split
