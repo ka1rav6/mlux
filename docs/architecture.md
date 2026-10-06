@@ -17,7 +17,7 @@ All the different folders (except `docs` of course) have their dedicated `Makefi
 In very simple words, the daemon handles multiple `sessions`. Each session is what the user detaches or attaches to.
 Each session contains multiple `windows` for the user, and each window contains multiple `panes`. The panes are the *"split terminals"* that the user is actually seeing. 
 
-The panes are drawn by `mlux` on the terminal. Every time the user does something, the bytes that are received by the terminal is parsed by the `TerminalParser`. These could be of the `csi` type, or any other type (including just normal bytes).
+The panes are drawn by `mlux` on the terminal. Every time the user does something, the bytes that are received by the terminal is parsed by the `TerminalParser`. These could be of the `csi` type, `osc` type, or any other type (including just normal bytes).
 
 The window contains all the `geometry` and layout of the panes. It, hence, also knows which pane is the active one and where the data was written/ should be written back to.
 
@@ -37,3 +37,8 @@ The geometry is just the data of points and sizes required to define a pane
 ```
 
 Then, the top most pane layout node, has two children nodes (of a vertical split) for the left and the right panes. The left pane has two more children that are separated because of a horizontal split
+
+
+
+WHY I chose to have a base parser:
+I want there to be one main parser that just hands the current bytes to the particular parser (csi/osc etc) until the state changes.

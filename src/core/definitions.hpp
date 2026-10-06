@@ -1,3 +1,9 @@
+/*
+ * Contains the definitions of basic `types` used throughout the project`
+ * This file is included in almost every other header file.
+ *
+ * */
+
 #ifndef MLUX_DEFINITIONS_H
 #define MLUX_DEFINITIONS_H
 

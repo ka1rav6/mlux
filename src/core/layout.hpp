@@ -8,6 +8,12 @@
 #include <optional>
 
 namespace mlux {
+// Layout tree node. Can be of three types :
+// Pane : THe main original pane
+// HorizontalSplit : Both the child nodes created after a pane is horizontally
+// split into half
+// VerticalSplit : Both the child nodes created after a pane is
+// veritcally split into half
 class LayoutNode {
   public:
     enum class Type : uint8_t { Pane, HorizontalSplit, VerticalSplit };
@@ -25,6 +31,7 @@ class LayoutNode {
     float _ratio;
 };
 
+// The main Layout Tree that contains the root layout node.
 class Layout {
   public:
     PaneId addPane();

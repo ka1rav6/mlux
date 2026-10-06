@@ -3,6 +3,7 @@
 
 #include "definitions.hpp"
 #include "geometry.hpp"
+
 #include <vector>
 
 using TextAttributes = uint64_t; // going to bitmask different attributes
@@ -15,6 +16,7 @@ struct Cell {
     TextAttributes attributes;
 };
 
+// The screen that is going to be visible to the user.
 class Screen {
   public:
     Screen(Size);
@@ -25,7 +27,6 @@ class Screen {
     void resize(Size);
 
     [[nodiscard]] Size size() const;
-
     // change this into a scrollback buffer later on
   private:
     std::vector<Cell> _cells;

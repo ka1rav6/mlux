@@ -1,5 +1,5 @@
 /*
- * this file contains the states of the csi parser that aer possible
+ * this file contains the states of the csi parser that are possible
  * as well as the csi node and the lexer definition
  * */
 
@@ -9,17 +9,6 @@
 #include <vector>
 
 namespace mlux {
-
-// the number of states the parser (finite state machine) can be in
-enum class csi_parser_state {
-    GROUND,
-    CSI_ENTRY,
-    CSI_MARKER,
-    CSI_PARAM,
-    CSI_INTERMEDIATE,
-    CSI_FINAL
-};
-
 // the main node.
 // each exit sequence of the type `ESC [ ______` follows this blueprint and
 // will be parsed and converted to this struct for further processing and

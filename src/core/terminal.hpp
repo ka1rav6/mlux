@@ -3,6 +3,8 @@
 
 #include "definitions.hpp"
 #include "geometry.hpp"
+#include "screen.hpp"
+
 #include <span>
 
 namespace mlux {

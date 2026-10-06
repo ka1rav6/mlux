@@ -11,7 +11,10 @@
 #include <vector>
 
 namespace mlux {
-
+// the main pane class that the user sees.
+// It contains a single pty (psuedoterminal) at a particular point of time.
+// right now I have added the functions to attach to another/detach from a pty
+// as well
 class Pane {
   public:
     Pane(PaneId id);

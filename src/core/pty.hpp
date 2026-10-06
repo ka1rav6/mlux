@@ -1,3 +1,9 @@
+/*
+ * wrapper over a pty. contains all the necessary information about a specific
+ * pty and wrappers for all the functions of the pty
+ *
+ */
+
 #ifndef MLUX_PTY_H
 #define MLUX_PTY_H
 
