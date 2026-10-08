@@ -10,7 +10,7 @@
 namespace mlux
 {
 
-std::unique_ptr<Pty> spawn(const ProcessSpec& process)
+std::unique_ptr<Pty> Pty::spawn(const ProcessSpec& process)
 {
     FileDescriptor master_fd = -1;
     // the rest of the params are nullptr so that they can be dynamically changed

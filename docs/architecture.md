@@ -2,6 +2,7 @@
 
 
 The `mlux` project is implemented in modern, object oriented c++. It uses `make` as the build system and `lua` as the plugin system
+To understand in a detailed view what happens in mlux since the start, check (internal_flow.md)[internal_flow.md]
 
 ## Folder design
 
@@ -42,10 +43,24 @@ Then, the top most pane layout node, has two children nodes (of a vertical split
 
 WHY I chose to have a base parser:
 I want there to be one main parser that just hands the current bytes to the particular parser (csi/osc etc) until the state changes.
-So, whenever there is an event:
-- the `epoll` from the server side captures it 
-- the window and pane of input is calculated
-- the pty reads the input
-- the main `parser` is sent the bytes
-- based on the current state and the bytes received, the input is parsed by the appropriate parser
-- The result is written back to the PTY where the input was initially captured
+So, whenever there is a user keypress:
+  - client reads its own stdin
+  - IPC to daemon
+  - daemon: which session/window/pane is active?       (Session::activeWindow, Window::activePane)
+  - encode the key for that pane's current modes       (TerminalModes::applicationCursorKeys)
+  - Pane::sendInput(bytes)
+  - Pty::write()  →  PTY master  →  child's stdin
+
+The child writes to PTY slave
+  - epoll says "master fd N is readable"
+  - look up which Pane owns fd N
+  - Pty::read()
+  - Terminal::feed(bytes)
+  - Parser::feed() → processByte() per byte, dispatching by state
+  - mutates that pane's Screen / Cursor / TerminalModes accordingly
+  - renderer diffs Screen against what the client last saw (only the differences)
+  - IPC to client
+  - client writes to the user's real terminal
+
+
+So the parser does nothing when there is a user keypress. It only works on the way back.
