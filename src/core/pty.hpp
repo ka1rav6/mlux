@@ -31,12 +31,13 @@ public:
     void write(std::span<const std::byte>);
     size_t read(std::span<std::byte>);
     void resize(Size size);
-    ProcessId childPid() const;
-    bool alive() const;
+    [[nodiscard]] ProcessId childPid() const;
+    [[nodiscard]] bool alive() const;
 
 private:
-    FileDescriptor _masterFd;
-    ProcessId _childPid;
+    FileDescripto
+
+        _master_fd ProcessId _child_pid;
 };
 } // namespace mlux
 

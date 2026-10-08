@@ -1,0 +1,82 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/clang++",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-I/home/kairav/dev/projects/mlux/src",
+      "-O3",
+      "-DNDEBUG",
+      "-flto",
+      "-c",
+      "-o",
+      "/home/kairav/dev/projects/mlux/build/bear/core/parser/csi_parser.o",
+      "core/parser/csi_parser.cpp"
+    ],
+    "directory": "/home/kairav/dev/projects/mlux/src",
+    "file": "/home/kairav/dev/projects/mlux/src/core/parser/csi_parser.cpp",
+    "output": "/home/kairav/dev/projects/mlux/build/bear/core/parser/csi_parser.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang++",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-I/home/kairav/dev/projects/mlux/src",
+      "-O3",
+      "-DNDEBUG",
+      "-flto",
+      "-c",
+      "-o",
+      "/home/kairav/dev/projects/mlux/build/bear/core/parser/parser.o",
+      "core/parser/parser.cpp"
+    ],
+    "directory": "/home/kairav/dev/projects/mlux/src",
+    "file": "/home/kairav/dev/projects/mlux/src/core/parser/parser.cpp",
+    "output": "/home/kairav/dev/projects/mlux/build/bear/core/parser/parser.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang++",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-I/home/kairav/dev/projects/mlux/src",
+      "-O3",
+      "-DNDEBUG",
+      "-flto",
+      "-c",
+      "-o",
+      "/home/kairav/dev/projects/mlux/build/bear/core/pty.o",
+      "core/pty.cpp"
+    ],
+    "directory": "/home/kairav/dev/projects/mlux/src",
+    "file": "/home/kairav/dev/projects/mlux/src/core/pty.cpp",
+    "output": "/home/kairav/dev/projects/mlux/build/bear/core/pty.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang++",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-I/home/kairav/dev/projects/mlux/src",
+      "-O3",
+      "-DNDEBUG",
+      "-flto",
+      "-c",
+      "-o",
+      "/home/kairav/dev/projects/mlux/build/bear/main.o",
+      "main.cpp"
+    ],
+    "directory": "/home/kairav/dev/projects/mlux/src",
+    "file": "/home/kairav/dev/projects/mlux/src/main.cpp",
+    "output": "/home/kairav/dev/projects/mlux/build/bear/main.o"
+  }
+]

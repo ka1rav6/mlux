@@ -34,8 +34,8 @@ private:
     SessionId _id = 0;
     std::string _name;
     std::unordered_map<WindowId, std::unique_ptr<Window>> _windows;
-    WindowId _activeWindow = 0;
-    std::chrono::system_clock::time_point _creationTime;
+    WindowId _active_window = 0;
+    std::chrono::system_clock::time_point _creation_time;
 };
 
 } // namespace mlux

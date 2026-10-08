@@ -35,7 +35,7 @@ private:
     WindowId _id = 0;
     std::string _name;
     std::unordered_map<PaneId, std::unique_ptr<Pane>> _panes;
-    PaneId _activePane = 0;
+    PaneId _active_pane = 0;
     Layout _layout;
     Size _size;
 };

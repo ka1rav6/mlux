@@ -1,6 +1,5 @@
 Checks: >
   bugprone-*,
-  llvm-header-guard,
   performance-*,
   portability-*,
   readability-*,
@@ -9,7 +8,8 @@ Checks: >
 
 WarningsAsErrors: ""
 
-HeaderFilterRegex: "^(include|src|tests)/.*"
+HeaderFilterRegex: ".*"
+ExcludeHeaderFilterRegex: ".*third_party.*"
 
 FormatStyle: file
 CheckOptions:

@@ -39,7 +39,7 @@ private:
     std::unique_ptr<Pty> _pty;
     std::unique_ptr<Terminal> _terminal;
     PaneGeometry _geometry;
-    ProcessId _processId = 0;
+    ProcessId _process_id = 0;
 };
 } // namespace mlux
 
