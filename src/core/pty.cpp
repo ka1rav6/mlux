@@ -35,10 +35,21 @@ std::unique_ptr<Pty> spawn(const ProcessSpec& process)
     // Not waiting here otherwise this function would not return
     return std::make_unique<Pty>(master_fd, pid);
 }
-
 void Pty::write(std::span<const std::byte> data) const
 {
-    ::write(_master_fd, data.data(), data.size_bytes());
+    while (!data.empty())
+    {
+        const ssize_t written = ::write(_master_fd, data.data(), data.size_bytes());
+        if (written < 0)
+        {
+            if (errno == EINTR)
+            {
+                continue;
+            } // retry
+            throw std::system_error(errno, std::generic_category(), "write");
+        }
+        data = data.subspan(static_cast<size_t>(written)); // advance past what went out
+    }
 }
 
 ssize_t Pty::read(std::span<std::byte>& buffer) const
