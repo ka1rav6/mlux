@@ -60,3 +60,4 @@ vcpkg_installed/
 Testing/
 .cache/
 CONTRIBUTING.md
+compile_commands.json

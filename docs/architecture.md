@@ -12,9 +12,9 @@ The `mlux` project is implemented in modern, object oriented c++. It uses `make`
 
 All the different folders (except `docs` of course) have their dedicated `Makefile` that gets recursively called 
 
-## Class Architecture and Point
+## Class Architecture and Design Decision
 
-In very simple words, the daemon handles multiple `sessions`. Each session is what the user detaches or attaches to.
+In very simple words, the `server` is actually a daemon handles multiple `sessions`. Each session is what the user detaches or attaches to.
 Each session contains multiple `windows` for the user, and each window contains multiple `panes`. The panes are the *"split terminals"* that the user is actually seeing. 
 
 The panes are drawn by `mlux` on the terminal. Every time the user does something, the bytes that are received by the terminal is parsed by the `TerminalParser`. These could be of the `csi` type, `osc` type, or any other type (including just normal bytes).
@@ -42,3 +42,10 @@ Then, the top most pane layout node, has two children nodes (of a vertical split
 
 WHY I chose to have a base parser:
 I want there to be one main parser that just hands the current bytes to the particular parser (csi/osc etc) until the state changes.
+So, whenever there is an event:
+- the `epoll` from the server side captures it 
+- the window and pane of input is calculated
+- the pty reads the input
+- the main `parser` is sent the bytes
+- based on the current state and the bytes received, the input is parsed by the appropriate parser
+- The result is written back to the PTY where the input was initially captured

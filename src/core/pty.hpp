@@ -18,26 +18,27 @@
 #include <unordered_map>
 #include <vector>
 
+#define READ_BUFFER_SIZE 2048
+
 namespace mlux
 {
 class Pty
 {
 public:
-    Pty() = delete;
+    Pty(FileDescriptor _master_fd, ProcessId cpid) : _master_fd(_master_fd), _child_pid(cpid) {}
     Pty(const Pty&) = delete;
-    static std::unique_ptr<Pty> spawn(const ProcessSpec& process, Size size);
+    static std::unique_ptr<Pty> spawn(const ProcessSpec& process);
     ~Pty();
     [[nodiscard]] int masterFd() const;
-    void write(std::span<const std::byte>);
-    size_t read(std::span<std::byte>);
     void resize(Size size);
+    // write is still a `const` function as we are writing through the FileDescriptor
+    void write(std::span<const std::byte>) const;
+    ssize_t read(std::span<std::byte>& buffer) const;
     [[nodiscard]] ProcessId childPid() const;
-    [[nodiscard]] bool alive() const;
 
 private:
-    FileDescripto
-
-        _master_fd ProcessId _child_pid;
+    FileDescriptor _master_fd;
+    ProcessId _child_pid;
 };
 } // namespace mlux
 

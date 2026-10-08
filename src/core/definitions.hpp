@@ -19,8 +19,8 @@ using PluginId = uint64_t;
 using CommandId = uint64_t;
 using Width = uint16_t;
 using Height = uint16_t;
-using ProcessId = uint32_t;
-using FileDescriptor = int;
+using ProcessId = int32_t;
+using FileDescriptor = int32_t;
 
 } // namespace mlux
 #endif
