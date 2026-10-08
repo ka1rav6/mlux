@@ -1,14 +1,13 @@
-#ifndef MLUX_PANE_H
-#define MLUX_PANE_H
+#pragma once
+
 #include "definitions.hpp"
 #include "geometry.hpp"
 #include "pty.hpp"
+#include "terminal.hpp"
 
-#include <ctime>
+#include <cstddef>
 #include <memory>
-#include <string>
-#include <unordered_map>
-#include <vector>
+#include <span>
 
 namespace mlux {
 // the main pane class that the user sees.
@@ -17,26 +16,26 @@ namespace mlux {
 // as well
 class Pane {
   public:
-    Pane(PaneId id);
+    explicit Pane(PaneId id);
+
     [[nodiscard]] PaneId id() const;
-    void attach(std::unique_ptr<Pty>);
+    void attach(std::unique_ptr<Pty> pty);
     void detach();
-    Pty *pty();
-    Terminal &terminal();
-    const Terminal &terminal() const;
-    void resize(uint16_t width, uint16_t height);
-    const PaneGeometry &geometry() const;
-    void setGeometry(PaneGeometry);
+    [[nodiscard]] Pty *pty();
+    [[nodiscard]] const Pty *pty() const;
+    [[nodiscard]] Terminal &terminal();
+    [[nodiscard]] const Terminal &terminal() const;
+    void resize(Size size);
+    [[nodiscard]] const PaneGeometry &geometry() const;
+    void setGeometry(PaneGeometry geometry);
     void sendInput(std::span<const std::byte> data);
-    ProcessId processId() const;
+    [[nodiscard]] ProcessId processId() const;
 
   private:
-    PaneId _id;
+    PaneId _id = 0;
     std::unique_ptr<Pty> _pty;
     std::unique_ptr<Terminal> _terminal;
     PaneGeometry _geometry;
-    ProcessId _processId;
+    ProcessId _processId = 0;
 };
 } // namespace mlux
-
-#endif

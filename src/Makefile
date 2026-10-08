@@ -30,4 +30,4 @@ $(BUILD_OUT)/%.o: %.cpp
 -include $(DEPS)
 
 clean:
-	rm -rf $(BUILD_OUT)/src
+	@rm -rf $(OBJECTS) $(DEPS) $(TARGET)

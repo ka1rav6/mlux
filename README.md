@@ -100,13 +100,16 @@ make install PREFIX=~/.local
 mlux/
 ├── Makefile          # top-level: build modes, install, fmt, info, etc.
 ├── src/
-│   └── Makefile      # finds sources and compiles/links the binary
+│   ├── Makefile      # finds sources and compiles/links the binary
+│   ├── core/         # sessions, windows, panes, terminal, VT parser
+│   ├── plugin/       # lua plugin system
+│   ├── criu/         # session checkpoint/restore
+│   └── third_party/  # vendored single-header dependencies
 ├── tests/
 │   └── Makefile      # test suite (placeholder)
 ├── bench/
 │   └── Makefile      # benchmarks (placeholder)
 ├── build/            # generated automatically — don't edit
-├── include/          # public headers
 ├── docs/             # design documentation
 └── README.md
 ```

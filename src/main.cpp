@@ -1,5 +1,3 @@
-#include "common/types.hpp"
-#include "pane/pane.hpp"
-#include "system/process.hpp"
+#include "core/session.hpp"
 
 int main(int /* argc */, const char * /* argv */[]) { return 0; }

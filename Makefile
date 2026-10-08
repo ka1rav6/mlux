@@ -21,25 +21,26 @@
 # ============================================================================
 
 # --- Toolchain --------------------------------------------------------------
-CXX       := clang++
-CXXCHECK  := clang++ --analyze
-CLANGFmt  := clang-format
+ifeq ($(origin CXX),default)
+  CXX := clang++
+endif
+CLANGFmt  ?= clang-format
 
 # --- Project ----------------------------------------------------------------
 PROJECT   := mlux
 SRC_DIR   := src
 BUILD_DIR := build
-PREFIX    := /usr/local
+PREFIX    ?= /usr/local
 
 # --- Version (git tag fallback to 0.0.0-dev) --------------------------------
 VERSION   := $(shell git describe --tags --always 2>/dev/null || echo "0.0.0-dev")
 
 # --- Exported to sub-Makefiles ----------------------------------------------
-export CXX CXXCHECK CLANGFmt
+export CXX CLANGFmt
 export PROJECT SRC_DIR BUILD_DIR VERSION
 
-# --- Recursive directory listing helper -------------------------------------
-rwildcard = $(foreach d,$(wildcard $(1:=/*)),$(call rwildcard,$d,$2) $(filter $(subst *,%,$2),$d))
+# --- Source list (expanded only when a recipe needs it) ---------------------
+FMT_FILES = $(shell find $(SRC_DIR) -type f \( -name '*.cpp' -o -name '*.hpp' -o -name '*.h' \) -not -path '*/third_party/*' 2>/dev/null)
 
 # --- Build flags (defaults: release) ----------------------------------------
 BASEFLAGS  := -std=c++20 -Wall -Wextra -Wpedantic -I$(CURDIR)/src
@@ -103,32 +104,32 @@ _build:
 	@$(MAKE) --no-print-directory -C $(SRC_DIR)
 
 # --- Test & Bench -----------------------------------------------------------
-test:
+test: build
 	@$(MAKE) --no-print-directory -C tests
 
-bench:
+bench: build
 	@$(MAKE) --no-print-directory -C bench
 
 # --- Format -----------------------------------------------------------------
 fmt format:
 	@echo "  FMT     formatting source files..."
-	@$(CLANGFmt) -i $(shell find $(SRC_DIR) -type f \( -name '*.cpp' -o -name '*.hpp' -o -name '*.h' \) 2>/dev/null)
+	@files="$(FMT_FILES)"; test -n "$$files" && $(CLANGFmt) -i $$files || true
 	@echo "  FMT     done."
 
 check:
 	@echo "  CHECK   verifying formatting..."
-	@$(CLANGFmt) --dry-run --Werror $(shell find $(SRC_DIR) -type f \( -name '*.cpp' -o -name '*.hpp' -o -name '*.h' \) 2>/dev/null) \
-		&& echo "  CHECK   all files properly formatted." \
-		|| (echo "  CHECK   some files need formatting. Run 'make fmt' first." && exit 1)
+	@files="$(FMT_FILES)"; test -n "$$files" || exit 0; \
+	$(CLANGFmt) --dry-run --Werror $$files
 
 # --- Install / Uninstall ---------------------------------------------------
 install: release
-	@echo "  INSTALL $(PROJECT) → $(PREFIX)/bin/$(PROJECT)"
-	@install -Dm755 $(BUILD_OUT)/$(PROJECT) $(PREFIX)/bin/$(PROJECT)
+	@echo "  INSTALL $(PROJECT) → $(DESTDIR)$(PREFIX)/bin/$(PROJECT)"
+	@mkdir -p $(DESTDIR)$(PREFIX)/bin
+	@install -m 755 $(BUILD_OUT)/$(PROJECT) $(DESTDIR)$(PREFIX)/bin/$(PROJECT)
 
 uninstall:
-	@echo "  REMOVE  $(PREFIX)/bin/$(PROJECT)"
-	@rm -f $(PREFIX)/bin/$(PROJECT)
+	@echo "  REMOVE  $(DESTDIR)$(PREFIX)/bin/$(PROJECT)"
+	@rm -f $(DESTDIR)$(PREFIX)/bin/$(PROJECT)
 
 # --- Clean ------------------------------------------------------------------
 clean:

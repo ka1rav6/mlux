@@ -1,10 +1,9 @@
-#ifndef MLUX_SESSION_H
-#define MLUX_SESSION_H
+#pragma once
 
 #include "definitions.hpp"
 #include "window.hpp"
 
-#include <ctime>
+#include <chrono>
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -15,27 +14,25 @@ namespace mlux {
 class Session {
   public:
     Session(SessionId id, std::string name);
-    ~Session() = default;
+
     [[nodiscard]] SessionId id() const;
+    [[nodiscard]] const std::string &name() const;
+    [[nodiscard]] WindowId activeWindow() const;
 
-    const std::string &name() const;
-    WindowId activeWindow() const;
     Window &createWindow();
-    void destroyWindow(WindowId);
-    Window *getWindow(WindowId);
-    const Window *getWindow(WindowId) const;
-    void selectWindow(WindowId);
+    void destroyWindow(WindowId id);
+    [[nodiscard]] Window *getWindow(WindowId id);
+    [[nodiscard]] const Window *getWindow(WindowId id) const;
+    void selectWindow(WindowId id);
 
-    std::vector<WindowId> windows() const;
+    [[nodiscard]] std::vector<WindowId> windows() const;
 
   private:
-    SessionId _id;
+    SessionId _id = 0;
     std::string _name;
     std::unordered_map<WindowId, std::unique_ptr<Window>> _windows;
-    WindowId _activeWindow;
-    time_t _creationTime;
+    WindowId _activeWindow = 0;
+    std::chrono::system_clock::time_point _creationTime;
 };
 
 } // namespace mlux
-
-#endif

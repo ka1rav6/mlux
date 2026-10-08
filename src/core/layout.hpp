@@ -1,9 +1,9 @@
-#ifndef MLUX_LAYOUT_H
-#define MLUX_LAYOUT_H
+#pragma once
 
 #include "definitions.hpp"
 #include "geometry.hpp"
 
+#include <cstdint>
 #include <memory>
 #include <optional>
 
@@ -17,34 +17,35 @@ namespace mlux {
 class LayoutNode {
   public:
     enum class Type : uint8_t { Pane, HorizontalSplit, VerticalSplit };
-    [[nodiscard]] Type type() const;
-    [[nodiscard]] PaneId pane() const;
 
-    LayoutNode *first();
-    LayoutNode *second();
+    [[nodiscard]] Type type() const;
+    [[nodiscard]] std::optional<PaneId> pane() const;
+
+    [[nodiscard]] LayoutNode *first();
+    [[nodiscard]] const LayoutNode *first() const;
+    [[nodiscard]] LayoutNode *second();
+    [[nodiscard]] const LayoutNode *second() const;
 
   private:
-    Type _type;
+    Type _type = Type::Pane;
     std::optional<PaneId> _pane;
     std::unique_ptr<LayoutNode> _first;
     std::unique_ptr<LayoutNode> _second;
-    float _ratio;
+    float _ratio = 0.5F;
 };
 
 // The main Layout Tree that contains the root layout node.
 class Layout {
   public:
     PaneId addPane();
-    void removePane(PaneId);
-    void splitHorizontal(PaneId);
-    void splitVertical(PaneId);
-    void resizePane(PaneId, int delta);
+    void removePane(PaneId id);
+    void splitHorizontal(PaneId id);
+    void splitVertical(PaneId id);
+    void resizePane(PaneId id, int delta);
     void calculate(Size windowSize);
-    Rectangle geometry(PaneId) const;
+    [[nodiscard]] std::optional<Rectangle> geometry(PaneId id) const;
 
   private:
     std::unique_ptr<LayoutNode> _root;
 };
 } // namespace mlux
-
-#endif

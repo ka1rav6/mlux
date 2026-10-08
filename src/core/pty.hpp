@@ -21,6 +21,8 @@
 namespace mlux {
 class Pty {
   public:
+    Pty() = delete;
+    Pty(const Pty &) = delete;
     static std::unique_ptr<Pty> spawn(const ProcessSpec &process, Size size);
     ~Pty();
     [[nodiscard]] int masterFd() const;
