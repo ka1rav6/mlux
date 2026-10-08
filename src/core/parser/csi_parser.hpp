@@ -1,4 +1,5 @@
-#pragma once
+#ifndef MLUX_CSI_PARSER_H
+#define MLUX_CSI_PARSER_H
 
 #include "base_parser.hpp"
 
@@ -8,17 +9,26 @@
 #include <string>
 #include <vector>
 
-namespace mlux {
+namespace mlux
+{
 
-enum class CSIState : uint8_t { Entry, Marker, Param, Intermediate, Final };
+enum class CSIState : uint8_t
+{
+    Entry,
+    Marker,
+    Param,
+    Intermediate,
+    Final
+};
 
-class CSIParser : public BaseParser {
-  public:
-    CSIParser(Terminal &terminal, ParserState &state);
+class CSIParser : public BaseParser
+{
+public:
+    CSIParser(Terminal& terminal, ParserState& state);
 
     void feed(std::span<const std::byte> data) override;
 
-  private:
+private:
     void processByte(uint8_t byte);
 
     // CSI-specific state/data
@@ -28,3 +38,5 @@ class CSIParser : public BaseParser {
 };
 
 } // namespace mlux
+
+#endif

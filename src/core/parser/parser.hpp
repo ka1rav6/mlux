@@ -1,4 +1,5 @@
-#pragma once
+#ifndef MLUX_PARSER_H
+#define MLUX_PARSER_H
 
 #include "base_parser.hpp"
 #include "csi_parser.hpp"
@@ -7,26 +8,30 @@
 #include <cstdint>
 #include <span>
 
-namespace mlux {
+namespace mlux
+{
 
 class Terminal;
 
-class Parser {
-  public:
-    explicit Parser(Terminal &terminal);
+class Parser
+{
+public:
+    explicit Parser(Terminal& terminal);
 
-    Parser(const Parser &) = delete;
-    Parser &operator=(const Parser &) = delete;
+    Parser(const Parser&) = delete;
+    Parser& operator=(const Parser&) = delete;
 
     void feed(std::span<const std::byte> data);
 
-  private:
+private:
     void processByte(uint8_t byte);
 
-    Terminal &_terminal;
+    Terminal& _terminal;
     ParserState _state = ParserState::Ground;
 
     CSIParser _csiParser;
 };
 
 } // namespace mlux
+
+#endif

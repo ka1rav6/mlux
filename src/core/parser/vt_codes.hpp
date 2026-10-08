@@ -3,8 +3,13 @@
  * by the VT parser.
  * */
 
-#pragma once
-namespace mlux {
+#ifndef MLUX_VT_CODES_H
+#define MLUX_VT_CODES_H
+
+namespace mlux
+{
 inline constexpr char ESC = '\x1b';
 
 }
+
+#endif

@@ -1,37 +1,45 @@
-#pragma once
+#ifndef MLUX_BASE_PARSER_H
+#define MLUX_BASE_PARSER_H
 
 #include <cstddef>
 #include <cstdint>
 #include <span>
 
-namespace mlux {
+namespace mlux
+{
 
 class Terminal;
 
-enum class ParserState : uint8_t {
+enum class ParserState : uint8_t
+{
     Ground,
     CSI,
     OSC,
     // TODO: Handle more
 };
 
-class BaseParser {
-  public:
-    BaseParser(Terminal &terminal, ParserState &state)
-        : _terminal(terminal), _state(state) {}
+class BaseParser
+{
+public:
+    BaseParser(Terminal& terminal, ParserState& state) : _terminal(terminal), _state(state) {}
 
     virtual ~BaseParser() = default;
 
-    BaseParser(const BaseParser &) = delete;
-    BaseParser &operator=(const BaseParser &) = delete;
+    BaseParser(const BaseParser&) = delete;
+    BaseParser& operator=(const BaseParser&) = delete;
 
     virtual void feed(std::span<const std::byte> data) = 0;
 
-  protected:
-    Terminal &_terminal;
-    ParserState &_state;
+protected:
+    Terminal& _terminal;
+    ParserState& _state;
 
-    void changeState(ParserState state) { _state = state; }
+    void changeState(ParserState state)
+    {
+        _state = state;
+    }
 };
 
 } // namespace mlux
+
+#endif

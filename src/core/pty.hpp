@@ -18,12 +18,14 @@
 #include <unordered_map>
 #include <vector>
 
-namespace mlux {
-class Pty {
-  public:
+namespace mlux
+{
+class Pty
+{
+public:
     Pty() = delete;
-    Pty(const Pty &) = delete;
-    static std::unique_ptr<Pty> spawn(const ProcessSpec &process, Size size);
+    Pty(const Pty&) = delete;
+    static std::unique_ptr<Pty> spawn(const ProcessSpec& process, Size size);
     ~Pty();
     [[nodiscard]] int masterFd() const;
     void write(std::span<const std::byte>);
@@ -32,7 +34,7 @@ class Pty {
     ProcessId childPid() const;
     bool alive() const;
 
-  private:
+private:
     FileDescriptor _masterFd;
     ProcessId _childPid;
 };

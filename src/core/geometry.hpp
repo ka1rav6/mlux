@@ -3,20 +3,24 @@
  *  that will be drawn.
  * */
 
-#pragma once
+#ifndef MLUX_GEOMETRY_H
+#define MLUX_GEOMETRY_H
 
 #include "definitions.hpp"
 
-namespace mlux {
+namespace mlux
+{
 // Basic struct to represent a point
-struct Point {
+struct Point
+{
     int x;
     int y;
     Point(int x, int y) : x(x), y(y) {}
 };
 
 // basic struct to represent the size of an object
-struct Size {
+struct Size
+{
     Height height;
     Width width;
     Size(Height h, Width w) : height(h), width(w) {}
@@ -25,19 +29,20 @@ struct Size {
 // basic rectangle struct. A pane will be defined through a rectangle
 // `contains` function used to check if the `Point` lies within the space
 // where the rectangle is.
-struct Rectangle {
+struct Rectangle
+{
     int x;
     int y;
     Height height;
     Width width;
-    Rectangle(int x, int y, Height h, Width w)
-        : x(x), y(y), height(h), width(w) {}
+    Rectangle(int x, int y, Height h, Width w) : x(x), y(y), height(h), width(w) {}
     [[nodiscard]] bool contains(Point p) const;
 };
 
 // The whole pane geomentry is defined through one main rectangle (for now)
-class PaneGeometry {
-  public:
+class PaneGeometry
+{
+public:
     /*
      * outer.x = column where the pane starts
      * outer.y = row where the pane starts
@@ -51,3 +56,5 @@ class PaneGeometry {
 };
 
 } // namespace mlux
+
+#endif

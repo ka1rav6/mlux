@@ -9,7 +9,8 @@
 
 #include <cinttypes>
 
-namespace mlux {
+namespace mlux
+{
 
 using SessionId = uint64_t;
 using WindowId = uint64_t;
