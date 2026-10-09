@@ -1,0 +1,149 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# a new push to a pull request cancels the run that is already going for it.
+# pushes to main always run to the end so that every commit has a verdict.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+env:
+  # clang-format and clang-tidy change their minds between major versions, so
+  # this has to match the version CONTRIBUTING.md asks developers to install.
+  # if they disagree, CI will demand reformats nobody can reproduce locally.
+  LLVM_VERSION: "20"
+
+jobs:
+  build:
+    name: build (${{ matrix.cxx }}, ${{ matrix.mode }})
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        cxx: [clang++-20, g++-14]
+        mode: [release, debug]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install the compiler
+        run: |
+          set -euxo pipefail
+          sudo apt-get update
+          if [[ "${{ matrix.cxx }}" == clang++-* ]]; then
+            wget -qO /tmp/llvm.sh https://apt.llvm.org/llvm.sh
+            chmod +x /tmp/llvm.sh
+            sudo /tmp/llvm.sh "${LLVM_VERSION}"
+          else
+            sudo apt-get install -y --no-install-recommends g++-14
+          fi
+
+      # the gcc column is the valuable one here: it has caught warnings that
+      # clang accepts silently.
+      - name: Build
+        env:
+          CXX: ${{ matrix.cxx }}
+        run: make ${{ matrix.mode }} EXTRA_CXXFLAGS=-Werror
+
+      - name: Check the binary starts
+        env:
+          ASAN_OPTIONS: detect_leaks=1:abort_on_error=1
+          UBSAN_OPTIONS: print_stacktrace=1:halt_on_error=1
+        run: ./build/${{ matrix.mode }}/mlux --help
+
+      - name: Check the install target
+        if: matrix.mode == 'release'
+        env:
+          CXX: ${{ matrix.cxx }}
+        run: |
+          make install DESTDIR="${RUNNER_TEMP}/stage"
+          test -x "${RUNNER_TEMP}/stage/usr/local/bin/mlux"
+
+  test:
+    name: test and bench
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install the compiler
+        run: |
+          set -euxo pipefail
+          sudo apt-get update
+          wget -qO /tmp/llvm.sh https://apt.llvm.org/llvm.sh
+          chmod +x /tmp/llvm.sh
+          sudo /tmp/llvm.sh "${LLVM_VERSION}"
+
+      # under the sanitizers, so that a memory or UB bug fails the build here
+      # rather than turning up as a crash on somebody's machine later.
+      - name: Run the tests
+        env:
+          CXX: clang++-20
+          ASAN_OPTIONS: detect_leaks=1:abort_on_error=1
+          UBSAN_OPTIONS: print_stacktrace=1:halt_on_error=1
+        run: make test MODE=sanitize
+
+      - name: Run the benchmarks
+        env:
+          CXX: clang++-20
+        run: make bench
+
+  format:
+    name: clang-format
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install clang-format
+        run: |
+          set -euxo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends "clang-format-${LLVM_VERSION}"
+
+      - run: make format-check CLANG_FORMAT="clang-format-${LLVM_VERSION}"
+
+  tidy:
+    name: clang-tidy
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install clang-tidy and bear
+        run: |
+          set -euxo pipefail
+          sudo apt-get update
+          wget -qO /tmp/llvm.sh https://apt.llvm.org/llvm.sh
+          chmod +x /tmp/llvm.sh
+          sudo /tmp/llvm.sh "${LLVM_VERSION}"
+          sudo apt-get install -y --no-install-recommends \
+            "clang-tidy-${LLVM_VERSION}" bear
+
+      # make tidy regenerates compile_commands.json with bear first, which is
+      # why that file must stay out of git: it is full of absolute paths.
+      - run: |
+          make tidy \
+            CXX="clang++-${LLVM_VERSION}" \
+            CLANG_TIDY="clang-tidy-${LLVM_VERSION}"
+
+  typos:
+    name: typos
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: crate-ci/typos@master
+
+  links:
+    name: documentation links
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: lycheeverse/lychee-action@v2
+        with:
+          args: --no-progress --offline '**/*.md'
+          fail: true
